@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_home"
+            android:icon="@drawable/ic_home"
+            android:title="Inicio" />
+
+        <item
+            android:id="@+id/menu_pro"
+            android:icon="@drawable/ic_product"
+            android:title="Productos" />
+
+        <item
+            android:id="@+id/menu_map"
+            android:icon="@drawable/ic_map"
+            android:title="Mapa" />
+
+        <item
+            android:id="@+id/menu_info"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="Información" />
+
+
+    </group>
+    <item android:title="Otras Opciones">
+
+        <menu>
+            <item
+                android:id="@+id/menu_conf"
+                android:icon="@drawable/ic_conf"
+                android:title="Configuración" />
+            <item
+                android:id="@+id/menu_out"
+                android:icon="@drawable/ic_out"
+                android:title="Salir" />
+        </menu>
+
+    </item>
+
+</menu>
