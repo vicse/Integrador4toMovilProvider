@@ -1,23 +1,37 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="192dp"
+    android:background="@drawable/header_nav"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/header_nav"
-        android:scaleType="centerCrop"/>
+        android:id="@+id/menu_photo"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/ic_profile" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/menu_fullname"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vicse Ore soto"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textStyle="bold"
-        android:textColor="#FFF"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"/>
+        android:textColor="#fff"
+        tools:text="Vicse Jefer Ore Soto"/>
 
-
-</FrameLayout>
+    <TextView
+        android:id="@+id/menu_email"
+        style="@style/Widget.AppCompat.Spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="vicse.ore@tecsup.edu.pe"/>
+</LinearLayout>

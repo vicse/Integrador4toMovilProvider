@@ -1,6 +1,8 @@
 package com.ore.vicse.integrador4to.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,6 +13,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ore.vicse.integrador4to.R;
@@ -20,6 +24,10 @@ import com.ore.vicse.integrador4to.fragments.MapFragment;
 import com.ore.vicse.integrador4to.fragments.ProductFragment;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private String nombrePro;
+    private String correoPro;
+    private Integer idProveedor;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -32,6 +40,22 @@ public class HomeActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navview);
+
+        SharedPreferences preferences = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+
+        nombrePro = preferences.getString("empresa", "Empresa");
+        correoPro = preferences.getString("email", "empresa@tecsup.edu.pe");
+
+        idProveedor = preferences.getInt("id", 0);
+
+        ImageView photoImage = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.menu_photo);
+        photoImage.setBackgroundResource(R.drawable.ic_profile);
+
+        TextView fullnameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.menu_fullname);
+        fullnameText.setText(nombrePro);
+
+        TextView emailText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.menu_email);
+        emailText.setText(correoPro);
 
         setFragmentByDefault();
 
@@ -72,6 +96,10 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.menu_pro:
                         fragment = new ProductFragment();
                         fragmentTransaction = true;
+                        Bundle datos = new Bundle();
+                        datos.putInt("idPro",idProveedor);
+                        fragment.setArguments(datos);
+                        Toast.makeText(HomeActivity.this,"Id proveedor"+ datos,Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.menu_map:
                         fragment = new MapFragment();

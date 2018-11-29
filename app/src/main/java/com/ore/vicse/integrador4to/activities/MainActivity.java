@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public void Login(View view){
         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void showRegisterProvider(View view){

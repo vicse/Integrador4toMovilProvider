@@ -1,6 +1,8 @@
 package com.ore.vicse.integrador4to.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,10 +46,10 @@ public class RegisterProviderActivity extends AppCompatActivity {
 
     public void callRegister(View view){
 
-        String empresa = empresaInput.getText().toString();
-        String ruc = rucInput.getText().toString();
-        String email = emailInput.getText().toString();
-        String password = passwordInput.getText().toString();
+        final String empresa = empresaInput.getText().toString();
+        final String ruc = rucInput.getText().toString();
+        final String email = emailInput.getText().toString();
+        final String password = passwordInput.getText().toString();
 
         if(empresa.isEmpty() || ruc.isEmpty() || email.isEmpty() || password.isEmpty()){
             Toast.makeText(this,"Todos los campos son requeridos", Toast.LENGTH_SHORT).show();
@@ -72,9 +74,19 @@ public class RegisterProviderActivity extends AppCompatActivity {
                         Log.d(TAG, "proveedor: " + proveedor);
 
                         Toast.makeText(RegisterProviderActivity.this, "Registro satisfactorio", Toast.LENGTH_LONG).show();
+
+                        SharedPreferences preferences = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+
+                        SharedPreferences.Editor editor= preferences.edit();
+                        editor.putInt("id", proveedor.getId_proveedor());
+                        editor.putString("empresa", empresa);
+                        editor.putString("ruc", ruc);
+                        editor.putString("email", email);
+                        editor.putString("password", password);
+                        editor.commit();
+
+                        startActivity(new Intent(RegisterProviderActivity.this, HomeActivity.class));
                         finish();
-                        Intent intent = new Intent(RegisterProviderActivity.this, HomeActivity.class);
-                        startActivity(intent);
 
                     } else {
                         Log.e(TAG, "onError: " + response.errorBody().string());
