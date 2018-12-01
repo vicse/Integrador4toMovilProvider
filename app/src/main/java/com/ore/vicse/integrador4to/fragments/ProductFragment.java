@@ -25,10 +25,19 @@ import retrofit2.Response;
 
 public class ProductFragment extends Fragment {
 
-    private static final String TAG = "ProductFragment";
+    private static final String TAG = ProductFragment.class.getSimpleName();
     private RecyclerView productosList;
+    private Integer idProveedor;
 
     public ProductFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            idProveedor = getArguments().getInt("idPro");
+        }
     }
 
     @Override
@@ -48,7 +57,7 @@ public class ProductFragment extends Fragment {
 
         ApiService service = ApiServiceGenerator.createService(ApiService.class);
 
-        Call<List<Producto>> call = service.getProductos();
+        Call<List<Producto>> call = service.getProductosPro(idProveedor);
 
         call.enqueue(new Callback<List<Producto>>() {
             @Override
