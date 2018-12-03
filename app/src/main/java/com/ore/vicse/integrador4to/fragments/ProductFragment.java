@@ -1,7 +1,9 @@
 package com.ore.vicse.integrador4to.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ore.vicse.integrador4to.R;
+import com.ore.vicse.integrador4to.activities.RegisterProductoActivity;
 import com.ore.vicse.integrador4to.adapters.ProductosAdapter;
 import com.ore.vicse.integrador4to.models.Producto;
 import com.ore.vicse.integrador4to.services.ApiService;
@@ -50,6 +53,17 @@ public class ProductFragment extends Fragment {
 
         productosList.setAdapter(new ProductosAdapter());
         initialize();
+
+        FloatingActionButton btnShowRegisterPro = (FloatingActionButton) view.findViewById(R.id.btnShowRegisterProducto);
+        btnShowRegisterPro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RegisterProductoActivity.class);
+                intent.putExtra("idProvider", idProveedor);
+                Toast.makeText(getContext(), "IdProveedor"+idProveedor, Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -97,5 +111,6 @@ public class ProductFragment extends Fragment {
 
         });
     }
+
 
 }

@@ -12,11 +12,11 @@
         android:layout_marginBottom="8dp"/>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnShowRegisterProducto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:src="@android:drawable/ic_menu_add"
-        android:onClick="action"/>
+        android:src="@android:drawable/ic_menu_add"/>
 </RelativeLayout>

@@ -54,7 +54,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
         viewHolder.precioText.setText("S/." + producto.getPrecio());
 
         String url = producto.getImagen();
-        Picasso.with(viewHolder.itemView.getContext()).load(url).into(viewHolder.fotoImage);
+        Picasso.with(viewHolder.itemView.getContext()).load("http://integrador4tociclo-vicse.c9users.io"+url).into(viewHolder.fotoImage);
 
     }
 
