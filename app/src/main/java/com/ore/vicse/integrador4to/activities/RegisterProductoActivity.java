@@ -18,13 +18,17 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.ore.vicse.integrador4to.R;
+import com.ore.vicse.integrador4to.models.Almacen;
 import com.ore.vicse.integrador4to.models.Producto;
 import com.ore.vicse.integrador4to.services.ApiService;
 import com.ore.vicse.integrador4to.services.ApiServiceGenerator;
@@ -33,6 +37,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -69,6 +75,7 @@ public class RegisterProductoActivity extends AppCompatActivity {
         precioInput = findViewById(R.id.precio_producto_input);
         detallesInput = findViewById(R.id.detalle_producto_input);
         spinner = findViewById(R.id.spinnerAlmacen);
+
 
 
 
@@ -263,6 +270,61 @@ public class RegisterProductoActivity extends AppCompatActivity {
         }
 
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
+    }
+
+    private void initialize(){
+
+        final ApiService service = ApiServiceGenerator.createService(ApiService.class);
+
+        Call<List<Almacen>> call = service.getAlmacenes();
+
+        call.enqueue(new Callback<List<Almacen>>() {
+            @Override
+            public void onResponse(Call<List<Almacen>> call, Response<List<Almacen>> response) {
+                try {
+                    int statusCode = response.code();
+                    Log.d(TAG, "HTPP status code: "+ statusCode);
+
+                    if(response.isSuccessful()){
+
+                        List<Almacen> almacenes = response.body();
+                        Log.d(TAG, "almacenes: " +almacenes);
+
+                        almacenes.add(0, new Almacen(0,"sad","asd","asd","Todos los almacenes"));
+
+                        ArrayAdapter<Almacen> almacenAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, almacenes);
+                        spinner.setAdapter(almacenAdapter);
+                        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                almacenId = item.getId();
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });*/
+
+                    }else{
+                        Log.e(TAG, "onError:" + response.errorBody().string());
+                        throw new Exception("Error en el servicio");
+                    }
+
+                }catch (Throwable t){
+                    try{
+                        Log.e(TAG, "onThrowable: " + t.toString(), t);
+                        Toast.makeText(RegisterProductoActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }catch (Throwable x){}
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Almacen>> call, Throwable t) {
+                Log.e(TAG, "onFailure:" +t.toString());
+                Toast.makeText(RegisterProductoActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }
