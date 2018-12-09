@@ -55,4 +55,15 @@ public class Almacen {
     public void setId_almacen(int id_almacen) {
         this.id_almacen = id_almacen;
     }
+
+    @Override
+    public String toString() {
+        return "Almacen{" +
+                "id_almacen=" + id_almacen +
+                ", longitud='" + longitud + '\'' +
+                ", latitud='" + latitud + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 }

@@ -1,7 +1,6 @@
 package com.ore.vicse.integrador4to.activities;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -19,15 +18,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.ore.vicse.integrador4to.R;
+import com.ore.vicse.integrador4to.adapters.AlmacenesAdapter;
 import com.ore.vicse.integrador4to.models.Almacen;
 import com.ore.vicse.integrador4to.models.Producto;
 import com.ore.vicse.integrador4to.services.ApiService;
@@ -36,6 +34,7 @@ import com.ore.vicse.integrador4to.services.ApiServiceGenerator;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,12 +51,14 @@ public class RegisterProductoActivity extends AppCompatActivity {
     private static final String TAG = RegisterProductoActivity.class.getSimpleName();
 
     private Integer idProvedor;
+    private AlmacenesAdapter mAlmacenesAdapter;
 
     private ImageView imagePreview;
-    private Spinner spinner;
+    private Spinner spinnerAlmacen;
     private EditText nombreInput;
     private EditText precioInput;
     private EditText detallesInput;
+    private Integer idAlmacen;
 
 
     @Override
@@ -74,12 +75,67 @@ public class RegisterProductoActivity extends AppCompatActivity {
         nombreInput = findViewById(R.id.nombre_producto_input);
         precioInput = findViewById(R.id.precio_producto_input);
         detallesInput = findViewById(R.id.detalle_producto_input);
-        spinner = findViewById(R.id.spinnerAlmacen);
 
+        //almacenes
+        spinnerAlmacen = findViewById(R.id.spinnerAlmacen);
+        mAlmacenesAdapter= new AlmacenesAdapter(this, new ArrayList<Almacen>(0));
+        spinnerAlmacen.setAdapter(mAlmacenesAdapter);
+        spinnerAlmacen.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int i, long id) {
+                Almacen almacen = (Almacen) parent.getItemAtPosition(i);
+                idAlmacen = almacen.getId_almacen();
+                Toast.makeText(RegisterProductoActivity.this, "Id Almacen:" +idAlmacen, Toast.LENGTH_LONG).show();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+        initializeSpinnerAlmacen();
 
     }
+    // spinner call retrofit
+
+    private void initializeSpinnerAlmacen(){
+
+        final ApiService service = ApiServiceGenerator.createService(ApiService.class);
+
+        Call<List<Almacen>> call = service.getAlmacenes();
+
+        call.enqueue(new Callback<List<Almacen>>() {
+            @Override
+            public void onResponse(Call<List<Almacen>> call, Response<List<Almacen>> response) {
+                try {
+                    int statusCode = response.code();
+                    Log.d(TAG, "HTPP status code: "+ statusCode);
+
+                    if(response.isSuccessful()){
+                        List<Almacen> almacenes = response.body();
+                        mAlmacenesAdapter.addAll(almacenes);
+
+                    }else{
+                        Log.e(TAG, "onError:" + response.errorBody().string());
+                        throw new Exception("Error en el servicio");
+                    }
+
+                }catch (Throwable t){
+                    try{
+                        Log.e(TAG, "onThrowable: " + t.toString(), t);
+                        Toast.makeText(RegisterProductoActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }catch (Throwable x){}
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Almacen>> call, Throwable t) {
+                Log.e(TAG, "onFailure:" +t.toString());
+                Toast.makeText(RegisterProductoActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     // Cámara configuración
 
@@ -147,6 +203,7 @@ public class RegisterProductoActivity extends AppCompatActivity {
         String precio = precioInput.getText().toString();
         String detalles = detallesInput.getText().toString();
         String idProveedor = idProvedor.toString();
+        String idAlma = idAlmacen.toString();
 
 
         if(nombre.isEmpty() || precio.isEmpty() || detalles.isEmpty()){
@@ -176,9 +233,10 @@ public class RegisterProductoActivity extends AppCompatActivity {
         RequestBody precioPart = RequestBody.create(MultipartBody.FORM, precio);
         RequestBody detallesPart = RequestBody.create(MultipartBody.FORM, detalles);
         final RequestBody idProveedorPart = RequestBody.create(MultipartBody.FORM, idProveedor);
+        final RequestBody idAlmaPart = RequestBody.create(MultipartBody.FORM, idAlma);
 
 
-        call = service.createProductoWithImage(nombrePart, precioPart, detallesPart, idProveedorPart, idProveedorPart, imagenPart);
+        call = service.createProductoWithImage(nombrePart, precioPart, detallesPart, idProveedorPart, idAlmaPart, imagenPart);
 
         call.enqueue(new Callback<Producto>() {
             @Override
@@ -272,59 +330,6 @@ public class RegisterProductoActivity extends AppCompatActivity {
         return Bitmap.createScaledBitmap(bitmap, resizedWidth, resizedHeight, false);
     }
 
-    private void initialize(){
 
-        final ApiService service = ApiServiceGenerator.createService(ApiService.class);
-
-        Call<List<Almacen>> call = service.getAlmacenes();
-
-        call.enqueue(new Callback<List<Almacen>>() {
-            @Override
-            public void onResponse(Call<List<Almacen>> call, Response<List<Almacen>> response) {
-                try {
-                    int statusCode = response.code();
-                    Log.d(TAG, "HTPP status code: "+ statusCode);
-
-                    if(response.isSuccessful()){
-
-                        List<Almacen> almacenes = response.body();
-                        Log.d(TAG, "almacenes: " +almacenes);
-
-                        almacenes.add(0, new Almacen(0,"sad","asd","asd","Todos los almacenes"));
-
-                        ArrayAdapter<Almacen> almacenAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, almacenes);
-                        spinner.setAdapter(almacenAdapter);
-                        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                almacenId = item.getId();
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });*/
-
-                    }else{
-                        Log.e(TAG, "onError:" + response.errorBody().string());
-                        throw new Exception("Error en el servicio");
-                    }
-
-                }catch (Throwable t){
-                    try{
-                        Log.e(TAG, "onThrowable: " + t.toString(), t);
-                        Toast.makeText(RegisterProductoActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-                    }catch (Throwable x){}
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Almacen>> call, Throwable t) {
-                Log.e(TAG, "onFailure:" +t.toString());
-                Toast.makeText(RegisterProductoActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
 
 }
