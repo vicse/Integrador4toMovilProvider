@@ -34,10 +34,10 @@
         android:layout_marginEnd="67dp"
         android:layout_marginBottom="21dp"
         android:background="#11000000"
-        android:drawableLeft="@drawable/ic_email"
+        android:drawableLeft="@drawable/ic_profile"
         android:ems="10"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:hint="Ruc"
+        android:inputType="number"
         android:textAlignment="center"
         android:textColor="#fff"
         android:textColorHint="#878484" />

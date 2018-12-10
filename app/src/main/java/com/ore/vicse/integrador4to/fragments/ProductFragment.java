@@ -60,7 +60,7 @@ public class ProductFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RegisterProductoActivity.class);
                 intent.putExtra("idProvider", idProveedor);
-                Toast.makeText(getContext(), "IdProveedor"+idProveedor, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "IdProveedor"+idProveedor, Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         });

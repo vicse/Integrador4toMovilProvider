@@ -46,4 +46,9 @@ public interface ApiService {
     @GET("/api/almacenes/")
     Call<List<Almacen>> getAlmacenes();
 
+    @FormUrlEncoded
+    @POST("/proveedores/login/")
+    Call<Proveedor> login(@Field("ruc") String ruc,
+                          @Field("password") String password);
+
 }

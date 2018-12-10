@@ -23,6 +23,7 @@ import retrofit2.Response;
 public class RegisterProviderActivity extends AppCompatActivity {
 
     private static final String TAG = RegisterProviderActivity.class.getSimpleName();
+    private SharedPreferences mPrefs;
 
     private EditText empresaInput,rucInput,emailInput,passwordInput;
 
@@ -75,15 +76,16 @@ public class RegisterProviderActivity extends AppCompatActivity {
 
                         Toast.makeText(RegisterProviderActivity.this, "Registro satisfactorio", Toast.LENGTH_LONG).show();
 
-                        SharedPreferences preferences = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+                        mPrefs = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
 
-                        SharedPreferences.Editor editor= preferences.edit();
+                        SharedPreferences.Editor editor= mPrefs.edit();
                         editor.putInt("id", proveedor.getId_proveedor());
                         editor.putString("empresa", empresa);
                         editor.putString("ruc", ruc);
                         editor.putString("email", email);
+                        editor.putString("imagen", proveedor.getImagen());
                         editor.putString("password", password);
-                        editor.commit();
+                        editor.apply();
 
                         startActivity(new Intent(RegisterProviderActivity.this, HomeActivity.class));
                         finish();

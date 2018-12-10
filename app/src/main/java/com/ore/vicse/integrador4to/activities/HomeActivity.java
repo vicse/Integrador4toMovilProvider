@@ -22,12 +22,16 @@ import com.ore.vicse.integrador4to.fragments.HomeFragment;
 import com.ore.vicse.integrador4to.fragments.InfoFragment;
 import com.ore.vicse.integrador4to.fragments.MapFragment;
 import com.ore.vicse.integrador4to.fragments.ProductFragment;
+import com.squareup.picasso.Picasso;
 
 public class HomeActivity extends AppCompatActivity {
 
+
     private String nombrePro;
     private String correoPro;
+    private String imagenPro;
     private Integer idProveedor;
+    private SharedPreferences mPrefs;
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -41,15 +45,22 @@ public class HomeActivity extends AppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navview);
 
-        SharedPreferences preferences = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+        mPrefs = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
 
-        nombrePro = preferences.getString("empresa", "Empresa");
-        correoPro = preferences.getString("email", "empresa@tecsup.edu.pe");
+        nombrePro = mPrefs.getString("empresa", "Empresa");
+        correoPro = mPrefs.getString("correo", "empresa@tecsup.edu.pe");
+        imagenPro = mPrefs.getString("imagen" , null);
 
-        idProveedor = preferences.getInt("id", 0);
+
+        idProveedor = mPrefs.getInt("id", 0);
 
         ImageView photoImage = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.menu_photo);
-        photoImage.setBackgroundResource(R.drawable.ic_profile);
+
+
+        photoImage.setBackgroundResource(R.drawable.ic_profile2);
+        Picasso.with(navigationView.getContext()).load("http://integrador4tociclo-vicse.c9users.io"+imagenPro).resize(64,64).into(photoImage);
+
+//        Picasso.with(navigationView.getContext()).load("http://integrador4tociclo-vicse.c9users.io"+imagenPro).into(navigationView.set;
 
         TextView fullnameText = (TextView) navigationView.getHeaderView(0).findViewById(R.id.menu_fullname);
         fullnameText.setText(nombrePro);
@@ -99,7 +110,7 @@ public class HomeActivity extends AppCompatActivity {
                         Bundle datos = new Bundle();
                         datos.putInt("idPro",idProveedor);
                         fragment.setArguments(datos);
-                        Toast.makeText(HomeActivity.this,"Id proveedor"+ datos,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(HomeActivity.this,"Id proveedor"+ datos,Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.menu_map:
                         fragment = new MapFragment();
@@ -113,8 +124,8 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(HomeActivity.this,"Configuración",Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.menu_out:
-                        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        logOut();
+                        startActivity(new Intent(HomeActivity.this, MainActivity.class));
                         break;
                 }
 
@@ -126,6 +137,19 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void logOut(){
+        mPrefs = getSharedPreferences("credenciales", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor=mPrefs.edit();
+        editor.putInt("id", 0);
+        editor.putString("empresa", null);
+        editor.putString("ruc", null);
+        editor.putString("correo", null);
+        editor.putString("imagen", null);
+        editor.putString("password", null);
+        editor.apply();
+    }
+
 
     private void setToolbar(){
         Toolbar toolbar = findViewById(R.id.toolbar);
